@@ -11,8 +11,14 @@
     
     <PreferenceCategory
     android:title="@string/general_category">
-    
-    </PreferenceCategory>
+
+    </PreferenceCategory>    
+    <!-- Monet -->
+    <Preference
+        android:key="monet_settings"
+        android:title="@string/monet_settings_title"
+        android:summary="@string/monet_settings_summary"
+        android:fragment="com.base.camp.fragments.ui.MonetSettings" />
 
     <!-- Font style -->
     <Preference

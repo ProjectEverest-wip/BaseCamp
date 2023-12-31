@@ -100,5 +100,11 @@
                android:summary="@string/pulse_on_new_tracks_summary"
                android:defaultValue="false" />
 
+          <com.everest.support.preferences.SystemSettingSwitchPreference
+               android:key="pocket_judge"
+               android:title="@string/pocket_judge_title"
+               android:summary="@string/pocket_judge_summary"
+               android:defaultValue="false" />     
+
      </PreferenceCategory>
 </PreferenceScreen>

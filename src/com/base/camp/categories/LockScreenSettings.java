@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.text.TextUtils;
 import androidx.preference.SwitchPreference;
 import androidx.preference.ListPreference;
@@ -50,9 +51,12 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements
     Preference mBlurRadiusPref;
 
      private static final String LOCKSCREEN_DOUBLE_LINE_CLOCK = "lockscreen_double_line_clock_switch";
+     
+     private static final String POCKET_JUDGE = "pocket_judge";
 
     	private SwitchPreference mKGCustomClockColor;
     	private SecureSettingSwitchPreference mDoubleLineClock;
+        private Preference mPocketJudge;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -62,6 +66,7 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements
         ContentResolver resolver = getActivity().getContentResolver();
         Resources resources = getResources();
         final PreferenceScreen prefScreen = getPreferenceScreen();
+        final Resources res = getResources();
         final PreferenceScreen prefSet = getPreferenceScreen();
         final PreferenceCategory ambientCat = (PreferenceCategory) prefScreen.findPreference(CATEGORY_AMBIENT);
         if (TextUtils.isEmpty(getResources().getString(com.android.internal.R.string.config_dozeDoubleTapSensorType)) &&
@@ -73,6 +78,12 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements
         mDoubleLineClock.setChecked((Settings.Secure.getInt(getContentResolver(),
              Settings.Secure.LOCKSCREEN_USE_DOUBLE_LINE_CLOCK, 1) != 0));
         mDoubleLineClock.setOnPreferenceChangeListener(this);
+
+        mPocketJudge = (Preference) prefScreen.findPreference(POCKET_JUDGE);
+        boolean mPocketJudgeSupported = res.getBoolean(
+                com.android.internal.R.bool.config_pocketModeSupported);
+        if (!mPocketJudgeSupported)
+            prefScreen.removePreference(mPocketJudge);
 
         mBlurRadiusPref = (Preference) findPreference(
                         BLUR_RADIUS_KEY);
@@ -98,6 +109,12 @@ public class LockScreenSettings extends SettingsPreferenceFragment implements
             return true; 
         }
         return false;
+    }
+
+    public static void reset(Context mContext) {
+        ContentResolver resolver = mContext.getContentResolver();
+        Settings.System.putIntForUser(resolver,
+                Settings.System.POCKET_JUDGE, 0, UserHandle.USER_CURRENT);
     }
 
     @Override
